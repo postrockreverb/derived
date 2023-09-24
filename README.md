@@ -37,7 +37,7 @@ https://codesandbox.io/s/yermak-derived-example-pscd8j
 
 ```typescript jsx
 
-import { derived, store, useStore } from "./Store";
+import { derived, store, useStore } from "yermak-derived";
 
 class Something {
   public $counter = store(1); // for naming store I prefer to use $ as prefix
