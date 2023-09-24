@@ -2,6 +2,12 @@
 
 Atomic state manager library based on Jotai.
 
+## Installation
+
+`yarn add yermak-derived`
+
+`npm install yermak-derived`
+
 ## Idea
 
 Library provides two base entities, that can be combined to cover all the necessary tasks.
