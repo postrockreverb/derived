@@ -46,7 +46,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SelenZzz/yermak-modals.git"
+    "url": "git+https://github.com/SelenZzz/yermak-derived.git"
   },
   "devDependencies": {
     "@babel/core": "^7.21.5",
