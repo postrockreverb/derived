@@ -4,9 +4,9 @@ Atomic state manager library based on Jotai.
 
 ## Installation
 
-`yarn add yermak-derived`
+`yarn add @yermak/derived`
 
-`npm install yermak-derived`
+`npm install @yermak/derived`
 
 ## Idea
 
@@ -37,7 +37,7 @@ https://codesandbox.io/s/yermak-derived-example-pscd8j
 
 ```typescript jsx
 
-import { derived, store, useStore } from "yermak-derived";
+import { derived, store, useStore } from "@yermak/derived";
 
 class Something {
   public $counter = store(1); // for naming store I prefer to use $ as prefix
@@ -59,12 +59,12 @@ class Something {
   };
 }
 
-const _something = new Something();
+const something = new Something();
 
 export default function App() {
-  const counter = useStore(_something.$counter);
-  const counterPowered = useStore(_something.$$counterPowered);
-  const power = useStore(_something.$power);
+  const counter = useStore(something.$counter);
+  const counterPowered = useStore(something.$$counterPowered);
+  const power = useStore(something.$power);
 
   return (
     <>
@@ -73,11 +73,11 @@ export default function App() {
         <input
           value={counter}
           onChange={(event) =>
-            _something.$counter.set(Number(event.target.value))
+            something.$counter.set(Number(event.target.value))
           }
         />
       </p>
-      <button onClick={() => _something.increasePower()}>Increase power</button>
+      <button onClick={() => something.increasePower()}>Increase power</button>
       <p>
         Powered by {power}: {counterPowered}
       </p>
