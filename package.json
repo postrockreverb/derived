@@ -1,5 +1,5 @@
 {
-  "name": "derived",
+  "name": "@yermak/derived",
   "version": "0.0.3",
   "description": "State manager library",
   "main": "./dist/index.js",
