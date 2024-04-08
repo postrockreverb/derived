@@ -1,5 +1,4 @@
 import typescript from '@rollup/plugin-typescript';
-import terser from '@rollup/plugin-terser';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import external from 'rollup-plugin-peer-deps-external';
@@ -33,7 +32,6 @@ export default [
         exclude: 'node_modules/**',
         presets: ['@babel/preset-env', '@babel/preset-react'],
       }),
-      terser(),
       filesize(),
     ],
     external: Object.keys(pkg.peerDependencies),
