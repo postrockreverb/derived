@@ -1,2 +1,137 @@
-import{useSyncExternalStore as n}from"react";function e(n){var e=n,t=new Set;return{get:function(){return e},set:function(n){e=n,t.forEach((function(n){return n(e)}))},subscribe:function(n){return t.add(n),function(){t.delete(n)}}}}function t(n,e,t,r){return new(t||(t=Promise))((function(u,o){function c(n){try{a(r.next(n))}catch(n){o(n)}}function i(n){try{a(r.throw(n))}catch(n){o(n)}}function a(n){var e;n.done?u(n.value):(e=n.value,e instanceof t?e:new t((function(n){n(e)}))).then(c,i)}a((r=r.apply(n,e||[])).next())}))}function r(n,e){var t,r,u,o,c={label:0,sent:function(){if(1&u[0])throw u[1];return u[1]},trys:[],ops:[]};return o={next:i(0),throw:i(1),return:i(2)},"function"==typeof Symbol&&(o[Symbol.iterator]=function(){return this}),o;function i(i){return function(a){return function(i){if(t)throw new TypeError("Generator is already executing.");for(;o&&(o=0,i[0]&&(c=0)),c;)try{if(t=1,r&&(u=2&i[0]?r.return:i[0]?r.throw||((u=r.return)&&u.call(r),0):r.next)&&!(u=u.call(r,i[1])).done)return u;switch(r=0,u&&(i=[2&i[0],u.value]),i[0]){case 0:case 1:u=i;break;case 4:return c.label++,{value:i[1],done:!1};case 5:c.label++,r=i[1],i=[0];continue;case 7:i=c.ops.pop(),c.trys.pop();continue;default:if(!(u=c.trys,(u=u.length>0&&u[u.length-1])||6!==i[0]&&2!==i[0])){c=0;continue}if(3===i[0]&&(!u||i[1]>u[0]&&i[1]<u[3])){c.label=i[1];break}if(6===i[0]&&c.label<u[1]){c.label=u[1],u=i;break}if(u&&c.label<u[2]){c.label=u[2],c.ops.push(i);break}u[2]&&c.ops.pop(),c.trys.pop();continue}i=e.call(n,c)}catch(n){i=[6,n],r=0}finally{t=u=0}if(5&i[0])throw i[1];return{value:i[0]?i[1]:void 0,done:!0}}([i,a])}}}function u(n){var e=null,u=new Set,o=new Set;function c(n){var e=n.get();return o.has(n)||(o.add(n),n.subscribe((function(n){e!==n&&(e=n,i())}))),e}function i(){return t(this,void 0,void 0,(function(){var t;return r(this,(function(r){switch(r.label){case 0:return(t=n(c))instanceof Promise?[4,t]:[3,2];case 1:return e=r.sent(),[3,3];case 2:e=t,r.label=3;case 3:return u.forEach((function(n){return n(e)})),[2]}}))}))}return i(),{get:function(){return e},subscribe:function(n){return u.add(n),function(){u.delete(n)}}}}function o(e){return n(e.subscribe,e.get)}"function"==typeof SuppressedError&&SuppressedError;export{u as derived,e as store,o as useStore};
+import { useSyncExternalStore } from 'react';
+
+function store(initialValue) {
+    var value = initialValue;
+    var subscribers = new Set();
+    return {
+        get: function () { return value; },
+        set: function (newValue) {
+            value = newValue;
+            subscribers.forEach(function (callback) { return callback(value); });
+        },
+        subscribe: function (callback) {
+            subscribers.add(callback);
+            return function () {
+                subscribers.delete(callback);
+            };
+        },
+    };
+}
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise, SuppressedError, Symbol */
+
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+
+function derived(valueGetter) {
+    var value = null;
+    var subscribers = new Set();
+    var subscribed = new Set();
+    function get(store) {
+        var currentValue = store.get();
+        if (!subscribed.has(store)) {
+            subscribed.add(store);
+            store.subscribe(function (newValue) {
+                if (currentValue === newValue)
+                    return;
+                currentValue = newValue;
+                void computeValue();
+            });
+        }
+        return currentValue;
+    }
+    function computeValue() {
+        return __awaiter(this, void 0, void 0, function () {
+            var newValue;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        newValue = valueGetter(get);
+                        if (!(newValue instanceof Promise)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, newValue];
+                    case 1:
+                        value = _a.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        value = newValue;
+                        _a.label = 3;
+                    case 3:
+                        subscribers.forEach(function (callback) { return callback(value); });
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    void computeValue();
+    return {
+        get: function () { return value; },
+        subscribe: function (callback) {
+            subscribers.add(callback);
+            return function () {
+                subscribers.delete(callback);
+            };
+        },
+    };
+}
+
+function useStore(store) {
+    return useSyncExternalStore(store.subscribe, store.get);
+}
+
+export { derived, store, useStore };
 //# sourceMappingURL=index.js.map
