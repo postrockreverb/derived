@@ -28,7 +28,11 @@ export function derived<StoreType>(valueGetter: ValueGetter<StoreType>): Derived
 
   async function computeValue() {
     const newValue = valueGetter(get);
-    value = await newValue;
+    if (newValue instanceof Promise) {
+      value = await newValue;
+    } else {
+      value = newValue;
+    }
     subscribers.forEach((callback) => callback(value));
   }
 
