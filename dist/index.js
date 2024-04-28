@@ -129,9 +129,40 @@ function derived(valueGetter) {
     };
 }
 
+function async(callable) {
+    var _this = this;
+    var isPending = store(false);
+    var callFn = function () {
+        var params = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            params[_i] = arguments[_i];
+        }
+        return __awaiter(_this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (isPending.get()) {
+                            return [2 /*return*/];
+                        }
+                        isPending.set(true);
+                        return [4 /*yield*/, callable.apply(void 0, params)];
+                    case 1:
+                        result = _a.sent();
+                        isPending.set(false);
+                        return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    return Object.assign(callFn, {
+        $isPending: store(false),
+    });
+}
+
 function useStore(store) {
     return useSyncExternalStore(store.subscribe, store.get);
 }
 
-export { derived, store, useStore };
+export { async, derived, store, useStore };
 //# sourceMappingURL=index.js.map

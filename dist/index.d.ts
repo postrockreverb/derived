@@ -12,6 +12,15 @@ interface Derived<StoreType> {
 type ValueGetter<StoreType> = (get: <Target>(a: Store<Target>) => Target) => StoreType | Promise<StoreType>;
 declare function derived<StoreType>(valueGetter: ValueGetter<StoreType>): Derived<StoreType>;
 
+type AsyncFunction = (...args: any[]) => Promise<any>;
+interface CallableFn<CallableType extends AsyncFunction> {
+    (...params: Parameters<CallableType>): Promise<ReturnType<CallableType>>;
+}
+interface Async<CallableType extends AsyncFunction> extends CallableFn<CallableType> {
+    $isPending: Store<boolean>;
+}
+declare function async<CallableType extends AsyncFunction>(callable: CallableType): Async<CallableType>;
+
 declare function useStore<StoreType>(store: Store<StoreType> | Derived<StoreType>): StoreType;
 
-export { Derived, Store, derived, store, useStore };
+export { Async, Derived, Store, async, derived, store, useStore };
