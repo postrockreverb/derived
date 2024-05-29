@@ -1,8 +1,7 @@
-import { Store } from './store';
-export interface Derived<StoreType> {
-    get: () => StoreType;
-    subscribe: (callback: (newValue: StoreType) => void) => () => void;
+import { StoreType } from './store';
+import { ObservableType } from './observable';
+export interface DerivedType<StoreType> extends ObservableType<StoreType> {
 }
-type ValueGetter<StoreType> = (get: <Target>(a: Store<Target>) => Target) => StoreType | Promise<StoreType>;
-export declare function derived<StoreType>(valueGetter: ValueGetter<StoreType>): Derived<StoreType>;
+type ValueGetter<T> = (get: <Target>(a: StoreType<Target>) => Target) => T | Promise<T>;
+export declare function derived<T>(valueGetter: ValueGetter<T>): DerivedType<T>;
 export {};

@@ -1,6 +1,5 @@
-export interface Store<StoreType> {
-    get: () => StoreType;
+import { ObservableType } from './observable';
+export interface StoreType<StoreType> extends ObservableType<StoreType> {
     set: (newValue: StoreType) => void;
-    subscribe: (callback: (newValue: StoreType) => void) => () => void;
 }
-export declare function store<StoreType>(initialValue: StoreType): Store<StoreType>;
+export declare function store<T>(initialValue: T): StoreType<T>;

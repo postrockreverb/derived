@@ -1,13 +1,10 @@
 import { useSyncExternalStore } from 'react';
 
-function store(initialValue) {
-    var value = initialValue;
+function observer() {
     var subscribers = new Set();
     return {
-        get: function () { return value; },
-        set: function (newValue) {
-            value = newValue;
-            subscribers.forEach(function (callback) { return callback(value); });
+        notify: function (newValue) {
+            subscribers.forEach(function (callback) { return callback(newValue); });
         },
         subscribe: function (callback) {
             subscribers.add(callback);
@@ -15,6 +12,19 @@ function store(initialValue) {
                 subscribers.delete(callback);
             };
         },
+    };
+}
+
+function store(initialValue) {
+    var _observer = observer();
+    var value = initialValue;
+    return {
+        get: function () { return value; },
+        set: function (newValue) {
+            value = newValue;
+            _observer.notify(newValue);
+        },
+        subscribe: _observer.subscribe,
     };
 }
 
@@ -79,16 +89,17 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 };
 
 function derived(valueGetter) {
+    var _observer = observer();
     var value = null;
-    var subscribers = new Set();
     var subscribed = new Set();
     function get(store) {
         var currentValue = store.get();
         if (!subscribed.has(store)) {
             subscribed.add(store);
             store.subscribe(function (newValue) {
-                if (currentValue === newValue)
+                if (currentValue === newValue) {
                     return;
+                }
                 currentValue = newValue;
                 void computeValue();
             });
@@ -111,7 +122,7 @@ function derived(valueGetter) {
                         value = newValue;
                         _a.label = 3;
                     case 3:
-                        subscribers.forEach(function (callback) { return callback(value); });
+                        _observer.notify(value);
                         return [2 /*return*/];
                 }
             });
@@ -120,12 +131,7 @@ function derived(valueGetter) {
     void computeValue();
     return {
         get: function () { return value; },
-        subscribe: function (callback) {
-            subscribers.add(callback);
-            return function () {
-                subscribers.delete(callback);
-            };
-        },
+        subscribe: _observer.subscribe,
     };
 }
 
@@ -156,13 +162,55 @@ function async(callable) {
         });
     };
     return Object.assign(callFn, {
-        $isPending: store(false),
+        $isPending: isPending,
     });
 }
 
-function useStore(store) {
+function map(initialValue) {
+    var _observer = observer();
+    var undefinedStore = store(undefined);
+    var map = new Map();
+    if (initialValue) {
+        for (var key in initialValue) {
+            var value = store(initialValue[key]);
+            map.set(key, value);
+        }
+    }
+    return {
+        get: function () { return map; },
+        item: function (key) {
+            if (key === null || key === undefined) {
+                return undefinedStore;
+            }
+            var valueStore = map.get(key);
+            if (valueStore === undefined) {
+                valueStore = store(undefined);
+                map.set(key, valueStore);
+            }
+            return valueStore;
+        },
+        has: function (key) { return map.has(key); },
+        set: function (key, value) {
+            var valueStore = map.get(key);
+            if (valueStore === undefined) {
+                map.set(key, store(value));
+                _observer.notify(map);
+                return;
+            }
+            if (valueStore.get() !== value) {
+                valueStore.set(value);
+                _observer.notify(map);
+                return;
+            }
+        },
+        delete: function (key) { return map.delete(key); },
+        subscribe: _observer.subscribe,
+    };
+}
+
+function useObservable(store) {
     return useSyncExternalStore(store.subscribe, store.get);
 }
 
-export { async, derived, store, useStore };
+export { async, derived, map, store, useObservable };
 //# sourceMappingURL=index.js.map
