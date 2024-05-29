@@ -1,25 +1,21 @@
-export interface Store<StoreType> {
-  get: () => StoreType;
+import { observer } from './observer';
+import { ObservableType } from './observable';
+
+export interface StoreType<StoreType> extends ObservableType<StoreType> {
   set: (newValue: StoreType) => void;
-  subscribe: (callback: (newValue: StoreType) => void) => () => void;
 }
 
-export function store<StoreType>(initialValue: StoreType): Store<StoreType> {
-  let value: StoreType = initialValue;
+export function store<T>(initialValue: T): StoreType<T> {
+  const _observer = observer<T>();
 
-  const subscribers = new Set<(newValue: StoreType) => void>();
+  let value: T = initialValue;
 
   return {
     get: () => value,
     set: (newValue) => {
       value = newValue;
-      subscribers.forEach((callback) => callback(value));
+      _observer.notify(newValue);
     },
-    subscribe: (callback) => {
-      subscribers.add(callback);
-      return () => {
-        subscribers.delete(callback);
-      };
-    },
+    subscribe: _observer.subscribe,
   };
 }

@@ -1,24 +1,26 @@
-import { Store } from './store';
+import { StoreType } from './store';
+import { observer } from './observer';
+import { ObservableType } from './observable';
 
-export interface Derived<StoreType> {
-  get: () => StoreType;
-  subscribe: (callback: (newValue: StoreType) => void) => () => void;
-}
+export interface DerivedType<StoreType> extends ObservableType<StoreType> {}
 
-type ValueGetter<StoreType> = (get: <Target>(a: Store<Target>) => Target) => StoreType | Promise<StoreType>;
+type ValueGetter<T> = (get: <Target>(a: StoreType<Target>) => Target) => T | Promise<T>;
 
-export function derived<StoreType>(valueGetter: ValueGetter<StoreType>): Derived<StoreType> {
-  let value: StoreType = null as StoreType;
+export function derived<T>(valueGetter: ValueGetter<T>): DerivedType<T> {
+  const _observer = observer<T>();
 
-  const subscribers = new Set<(newValue: StoreType) => void>();
-  const subscribed = new Set<Store<any>>();
+  let value: T = null as T;
 
-  function get<Target>(store: Store<Target>) {
+  const subscribed = new Set<StoreType<any>>();
+
+  function get<Target>(store: StoreType<Target>) {
     let currentValue = store.get();
     if (!subscribed.has(store)) {
       subscribed.add(store);
       store.subscribe(function (newValue) {
-        if (currentValue === newValue) return;
+        if (currentValue === newValue) {
+          return;
+        }
         currentValue = newValue;
         void computeValue();
       });
@@ -33,18 +35,13 @@ export function derived<StoreType>(valueGetter: ValueGetter<StoreType>): Derived
     } else {
       value = newValue;
     }
-    subscribers.forEach((callback) => callback(value));
+    _observer.notify(value);
   }
 
   void computeValue();
 
   return {
     get: () => value,
-    subscribe: (callback) => {
-      subscribers.add(callback);
-      return () => {
-        subscribers.delete(callback);
-      };
-    },
+    subscribe: _observer.subscribe,
   };
 }
