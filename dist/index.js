@@ -170,41 +170,39 @@ function map(initialValue) {
     var _observer = observer();
     var undefinedStore = store(undefined);
     var map = new Map();
-    if (initialValue) {
-        for (var key in initialValue) {
-            var value = store(initialValue[key]);
-            map.set(key, value);
+    var addStore = function (key, value) {
+        var valueStore = store(value);
+        map.set(key, valueStore);
+        return valueStore;
+    };
+    var getStore = function (key) {
+        var valueStore = map.get(key);
+        if (valueStore === undefined) {
+            return addStore(key, undefined);
         }
+        return valueStore;
+    };
+    for (var key in initialValue) {
+        addStore(key, initialValue[key]);
     }
     return {
-        get: function () { return map; },
         item: function (key) {
             if (key === null || key === undefined) {
                 return undefinedStore;
             }
-            var valueStore = map.get(key);
-            if (valueStore === undefined) {
-                valueStore = store(undefined);
-                map.set(key, valueStore);
-            }
-            return valueStore;
+            var valueStore = getStore(key);
+            return {
+                set: function (newValue) {
+                    if (valueStore.get() === newValue) {
+                        return;
+                    }
+                    valueStore.set(newValue);
+                    _observer.notify(new Map(map));
+                },
+                get: valueStore.get,
+                subscribe: valueStore.subscribe,
+            };
         },
-        has: function (key) { return map.has(key); },
-        set: function (key, value) {
-            var valueStore = map.get(key);
-            if (valueStore === undefined) {
-                map.set(key, store(value));
-                _observer.notify(map);
-                return;
-            }
-            if (valueStore.get() !== value) {
-                valueStore.set(value);
-                _observer.notify(map);
-                return;
-            }
-        },
-        delete: function (key) { return map.delete(key); },
-        subscribe: _observer.subscribe,
     };
 }
 
@@ -212,5 +210,5 @@ function useObservable(store) {
     return useSyncExternalStore(store.subscribe, store.get);
 }
 
-export { async, derived, map, store, useObservable };
+export { async, derived, map, observer, store, useObservable };
 //# sourceMappingURL=index.js.map

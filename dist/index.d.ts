@@ -1,6 +1,11 @@
 type UpdateFn<T> = (newValue: T) => void;
 type CleanUpCb = () => void;
 type SubscribeFn<T> = (callback: UpdateFn<T>) => CleanUpCb;
+interface Observer<T> {
+    notify: UpdateFn<T>;
+    subscribe: SubscribeFn<T>;
+}
+declare function observer<T>(): Observer<T>;
 
 interface ObservableType<T> {
     get: () => T;
@@ -29,12 +34,9 @@ declare function async<CallableType extends AsyncFunction>(callable: CallableTyp
 
 type MapValue<K extends keyof any, V> = Record<K, V>;
 type MapItemStore<V> = StoreType<V | undefined>;
-interface MapType<K extends keyof any, V> extends ObservableType<Map<K, StoreType<V | undefined>>> {
+interface MapType<K extends keyof any, V> {
     item: (key?: K | null | undefined) => MapItemStore<V>;
-    has: (key: K) => boolean;
-    set: (key: K, value: V) => void;
-    delete: (key: K) => void;
 }
 declare function map<K extends keyof any, V>(initialValue?: MapValue<K, V>): MapType<K, V>;
 
-export { AsyncType, DerivedType, MapType, ObservableType, StoreType, async, derived, map, store, useObservable };
+export { AsyncType, DerivedType, MapType, ObservableType, Observer, StoreType, async, derived, map, observer, store, useObservable };
