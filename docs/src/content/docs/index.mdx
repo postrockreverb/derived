@@ -1,0 +1,104 @@
+---
+title: Derived
+description: Atomic state manager library inspired by simplicity of Jotai and Svelte stores.
+template: splash
+hero:
+  tagline: Atomic state manager library inspired by simplicity of Jotai and Svelte stores.
+  actions:
+  - text: View on GitHub
+    link: https://github.com/postrockreverb/derived
+    icon: external
+---
+
+## Installation
+
+`yarn add @postrockreverb/derived`
+
+`npm install @postrockreverb/derived`
+
+`bun add @postrockreverb/derived`
+
+## Usage
+
+### Store
+
+Observable value with get, set, update and subscribe methods.
+
+```tsx live
+import { store, type ObservableType } from '@postrockreverb/derived';
+import { useSyncExternalStore } from 'react';
+
+// Create a custom hook that takes an ObservableType<T> store object
+// This hook uses useSyncExternalStore to subscribe to changes in the store and get its current value
+function use<T>(store: ObservableType<T>, getServerSnapshot?: () => T) {
+  return useSyncExternalStore(store.subscribe, store.get, getServerSnapshot);
+}
+
+// Create a store with an initial value of 1
+// Variables for stores are prefixed with $, indicating that it's a store
+const $counter = store(1);
+
+// Stores can be modified outside of components
+function add1() {
+  $counter.update((value) => value + 1);
+}
+
+export default function () {
+  // Use the custom hook use to get the current counter value from the store
+  const counter = use($counter, () => 1);
+
+  return (
+    <p>
+      <button onClick={add1}>Add 1</button>
+
+      {/* Stores can also be modified inside components */}
+      <button onClick={() => $counter.update((value) => value + 2)}>Add 2</button>
+
+      <span>Counter: {counter}</span>
+    </p>
+  );
+}
+```
+
+### Derived
+
+Derived observable value based on a getter function. It subscribes to stores and updates its value when any of the stores change.
+
+```tsx live
+import { store, derived, type ObservableType } from '@postrockreverb/derived';
+import { useSyncExternalStore } from 'react';
+
+function use<T>(store: ObservableType<T>, getServerSnapshot?: () => T) {
+  return useSyncExternalStore(store.subscribe, store.get, getServerSnapshot);
+}
+
+const $counter = store(1);
+
+// Create a derived store $doubled that computes its value based on the $counter store
+// Whenever $counter value is changed, the value of $doubled is reevaluated
+const $doubled = derived((get) => {
+  return get($counter) * 2;
+});
+
+export default function () {
+  const counter = use($counter, () => 1);
+  const doubled = use($doubled, () => 2);
+
+  return (
+    <p>
+      <button onClick={() => $counter.update((value) => value + 1)}>Add 1</button>
+      <span>Counter: {counter}</span>
+      <span>Doubled: {doubled}</span>
+    </p>
+  );
+}
+```
+
+## Contributing
+
+If you would like to contribute to the project, please fork the repository and submit a pull request with your changes.
+
+## Contact
+
+If you have any questions or suggestions, feel free to reach out through [GitHub Issues](https://github.com/postrockreverb/derived/issues).
+

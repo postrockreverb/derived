@@ -1,0 +1,44 @@
+.example-container button {
+  background: var(--sl-color-text-accent);
+  border-color: var(--sl-color-text-accent);
+  color: var(--sl-color-black);
+
+  font-size: var(--sl-text-base);
+  padding: 0.9375rem 1.25rem;
+
+  align-items: center;
+
+  border: 1px solid transparent;
+  border-radius: 999rem;
+
+  display: inline-flex;
+  gap: 0.5em;
+  line-height: 1.1875;
+  outline-offset: 0.25rem;
+  padding: 0.4375rem 1.125rem;
+  text-decoration: none;
+}
+
+.example-container button:hover {
+  background: var(--sl-color-blue-high);
+  transition: all 0.3s ease;
+}
+
+.example-container button:active {
+  background: var(--sl-color-purple-high);
+  transition: all 0.3s ease;
+}
+
+.example-container span {
+  display: block;
+  font-weight: 600;
+  font-size: var(--sl-text-h4);
+  color: var(--sl-color-white);
+  line-height: var(--sl-line-height-headings);
+}
+
+.example-container p {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
