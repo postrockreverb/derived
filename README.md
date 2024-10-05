@@ -1,89 +1,20 @@
 # Derived
 
-Atomic state manager library based on Jotai.
+Atomic state manager library inspired by Jotai and Svelte stores.
+Library utilizes asynchronous functions, observables, and a map-like structures.
 
 ## Installation
 
 `yarn add @yermak/derived`
-
 `npm install @yermak/derived`
+`bun add @yermak/derived`
 
-## Idea
+## Entities
 
-Library provides two base entities, that can be combined to cover all the necessary tasks.
+### Observable
 
-### Store
+- Defines a structure for observables with get and subscribe methods.
 
-Store holds value of provided type. As simple as `useState` from react.
+### Derived
 
-- `get` - returns store value.
-- `set` - sets value.
-
-### Derived store
-
-Derived store holds computed from some stores value.
-
-- `get` - returns computed value.
-
-### useStore
-
-`useStore` hook can be used to get value from both Store and Derived store.
-
-## Examples
-
-### Basic usage
-
-https://codesandbox.io/s/yermak-derived-example-pscd8j
-
-```typescript jsx
-
-import { derived, store, useStore } from "@yermak/derived";
-
-class Something {
-  public $counter = store(1); // for naming store I prefer to use $ as prefix
-  public $power = store<number>(1); // type can be defined
-
-  constructor() {
-    this.increasePower(); // on store create increase power by 1
-  }
-
-  // and for derived - $$ as prefix
-  public $$counterPowered = derived(async (get) => {
-    const counter = get(this.$counter); // use get function to subscribe to changes
-    const power = this.$power.get(); // changes of store $power will not trigger reevaluate
-    return Math.pow(counter, power);
-  });
-
-  public increasePower = () => {
-    this.$power.set(this.$power.get() + 1);
-  };
-}
-
-const something = new Something();
-
-export default function App() {
-  const counter = useStore(something.$counter);
-  const counterPowered = useStore(something.$$counterPowered);
-  const power = useStore(something.$power);
-
-  return (
-    <>
-      <p>
-        <label>Counter </label>
-        <input
-          value={counter}
-          onChange={(event) =>
-            something.$counter.set(Number(event.target.value))
-          }
-        />
-      </p>
-      <button onClick={() => something.increasePower()}>Increase power</button>
-      <p>
-        Powered by {power}: {counterPowered}
-      </p>
-    </>
-  );
-}
-
-```
-
+- Creates a derived observable value based on a getter function. It subscribes to stores and updates its value when any of the stores change.
