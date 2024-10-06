@@ -5,6 +5,8 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://postrockreverb.github.io/derived',
+  base: 'derived',
   integrations: [
     starlight({
       title: '@postrockreverb/derived',
