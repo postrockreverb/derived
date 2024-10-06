@@ -1,6 +1,6 @@
 {
   "name": "@postrockreverb/derived",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Yermak Aleksandr",
   "repository": {
     "type": "git",
@@ -11,6 +11,10 @@
   "devDependencies": {
     "microbundle": "^0.15.1"
   },
+  "files": [
+    "./dist",
+    "./package.json"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -24,7 +28,7 @@
     "url": "https://github.com/postrockreverb/derived/issues"
   },
   "description": "Atomic state management library",
-  "homepage": "https://github.com/postrockreverb/derived#readme",
+  "homepage": "https://postrockreverb.github.io/derived",
   "keywords": [
     "state manager",
     "typescript"
@@ -33,7 +37,8 @@
   "private": false,
   "scripts": {
     "build": "microbundle --sourcemap false --no-compress",
-    "dev": "microbundle watch --sourcemap false --no-compress"
+    "dev": "microbundle watch --sourcemap false --no-compress",
+    "publish": "npm publish --access=public"
   },
   "type": "module",
   "types": "dist/index.d.ts",
